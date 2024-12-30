@@ -16,9 +16,7 @@ export default class DeepMap<Keys extends ReadonlyArray<unknown>, Value> {
   get(keys: Keys): Value | undefined {
     const branch = this.#getBranch(keys)
     if (!branch) return
-    return this.#values.get(
-      branch
-    )
+    return this.#values.get(branch)
   }
 
   #getBranch(keys: Keys): Branch | undefined {
@@ -46,7 +44,6 @@ export default class DeepMap<Keys extends ReadonlyArray<unknown>, Value> {
     return this.#values.has(branch)
   }
 
-
   delete(keys: Keys): boolean {
     const branch = this.#getBranch(keys)
     if (!branch) return false
@@ -59,14 +56,14 @@ export default class DeepMap<Keys extends ReadonlyArray<unknown>, Value> {
 
   #clearBranch(branch: Branch) {
     if (this.#values.has(branch)) this.#values.delete(branch)
-    for (let map of branch.values()) this.#clearBranch(map)
+    for (const map of branch.values()) this.#clearBranch(map)
     return branch.clear()
   }
 
   *keys(): IterableIterator<Keys> {
     yield* this.#keysOfBranch(this.#tree)
   }
-  
+
   *#keysOfBranch(
     branch: Branch,
     keys: ReadonlyArray<Keys[number]> = []
